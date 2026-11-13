@@ -22,8 +22,8 @@
 #define MODULE_FunctionBlocks_Version_Minor 10
 #define MODULE_FunctionBlocks_Version_Revision 0
 #define MODULE_FunctionBlocks_ETS 10
-#define MODULE_SwitchActuator_Version "0.3.0+628478e"
+#define MODULE_SwitchActuator_Version "0.4.0"
 #define MODULE_SwitchActuator_Version_Major 0
-#define MODULE_SwitchActuator_Version_Minor 3
+#define MODULE_SwitchActuator_Version_Minor 4
 #define MODULE_SwitchActuator_Version_Revision 0
-#define MODULE_SwitchActuator_ETS 3
+#define MODULE_SwitchActuator_ETS 4

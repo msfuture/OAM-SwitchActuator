@@ -17,14 +17,14 @@
 #define MAIN_FirmwareName "Schaltaktor"
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 2
-#define MAIN_ApplicationVersion 3
+#define MAIN_ApplicationVersion 4
 #define MAIN_ApplicationEncoding iso-8859-15
 #define MAIN_ParameterSize 13354
-#define MAIN_MaxKoNumber 521
+#define MAIN_MaxKoNumber 553
 #define MAIN_OrderNumber "OpenKnxSwitchActuator"
 #define BASE_ModuleVersion 24
 #define UCT_ModuleVersion 5
-#define SWA_ModuleVersion 3
+#define SWA_ModuleVersion 4
 #define LOG_ModuleVersion 67
 #define FCB_ModuleVersion 10
 // Parameter with single occurrence
@@ -202,6 +202,9 @@
 #define SWA_TotalCurrentSend                    116      // 1 Bit, Bit 6
 #define     SWA_TotalCurrentSendMask 0x40
 #define     SWA_TotalCurrentSendShift 6
+#define SWA_TotalEnergySend                     116      // 1 Bit, Bit 5
+#define     SWA_TotalEnergySendMask 0x20
+#define     SWA_TotalEnergySendShift 5
 #define SWA_TotalPowerSendMinChangePercent      117      // uint8_t
 #define SWA_TotalPowerSendMinChangeAbsolute     118      // uint16_t
 #define SWA_TotalPowerSendCyclicBase            120      // 2 Bits, Bit 7-6
@@ -218,6 +221,13 @@
 #define SWA_TotalCurrentSendCyclicTime          125      // 14 Bits, Bit 13-0
 #define     SWA_TotalCurrentSendCyclicTimeMask 0x3FFF
 #define     SWA_TotalCurrentSendCyclicTimeShift 0
+#define SWA_TotalEnergySendMinChangeAbsolute    127      // uint16_t
+#define SWA_TotalEnergySendCyclicBase           129      // 2 Bits, Bit 7-6
+#define     SWA_TotalEnergySendCyclicBaseMask 0xC0
+#define     SWA_TotalEnergySendCyclicBaseShift 6
+#define SWA_TotalEnergySendCyclicTime           129      // 14 Bits, Bit 13-0
+#define     SWA_TotalEnergySendCyclicTimeMask 0x3FFF
+#define     SWA_TotalEnergySendCyclicTimeShift 0
 #define SWA_FrontControlInput                   131      // 1 Bit, Bit 7
 #define     SWA_FrontControlInputMask 0x80
 #define     SWA_FrontControlInputShift 7
@@ -253,6 +263,16 @@
 #define ParamSWA_TotalCurrentSendCyclicTime          (knx.paramWord(SWA_TotalCurrentSendCyclicTime) & SWA_TotalCurrentSendCyclicTimeMask)
 // Zeit (in Millisekunden)
 #define ParamSWA_TotalCurrentSendCyclicTimeMS        (paramDelay(knx.paramWord(SWA_TotalCurrentSendCyclicTime)))
+// Gesamtenergie senden
+#define ParamSWA_TotalEnergySend                     ((bool)(knx.paramByte(SWA_TotalEnergySend) & SWA_TotalEnergySendMask))
+// Mindeständerung absolut
+#define ParamSWA_TotalEnergySendMinChangeAbsolute    (knx.paramWord(SWA_TotalEnergySendMinChangeAbsolute))
+// Zeitbasis
+#define ParamSWA_TotalEnergySendCyclicBase           ((knx.paramByte(SWA_TotalEnergySendCyclicBase) & SWA_TotalEnergySendCyclicBaseMask) >> SWA_TotalEnergySendCyclicBaseShift)
+// Zeit
+#define ParamSWA_TotalEnergySendCyclicTime           (knx.paramWord(SWA_TotalEnergySendCyclicTime) & SWA_TotalEnergySendCyclicTimeMask)
+// Zeit (in Millisekunden)
+#define ParamSWA_TotalEnergySendCyclicTimeMS         (paramDelay(knx.paramWord(SWA_TotalEnergySendCyclicTime)))
 // Frontbedienung aktivieren
 #define ParamSWA_FrontControlInput                   ((bool)(knx.paramByte(SWA_FrontControlInput) & SWA_FrontControlInputMask))
 // LED-Ausgabe aktivieren
@@ -261,6 +281,7 @@
 #define SWA_KoCentralFunction 20
 #define SWA_KoTotalPower 21
 #define SWA_KoTotalCurrent 22
+#define SWA_KoTotalEnergy 23
 
 // Zentralfunktion
 #define KoSWA_CentralFunction                     (knx.getGroupObject(SWA_KoCentralFunction))
@@ -268,6 +289,8 @@
 #define KoSWA_TotalPower                          (knx.getGroupObject(SWA_KoTotalPower))
 // Gesamtstrom
 #define KoSWA_TotalCurrent                        (knx.getGroupObject(SWA_KoTotalCurrent))
+// Gesamtenergie
+#define KoSWA_TotalEnergy                         (knx.getGroupObject(SWA_KoTotalEnergy))
 
 #define SWA_ChannelCount 8
 
@@ -333,6 +356,9 @@
 #define SWA_ChMeasureActive                      9      // 1 Bit, Bit 5
 #define     SWA_ChMeasureActiveMask 0x20
 #define     SWA_ChMeasureActiveShift 5
+#define SWA_ChMeasureInvert                       9      // 1 Bit, Bit 4
+#define     SWA_ChMeasureInvertMask 0x10
+#define     SWA_ChMeasureInvertShift 4
 #define SWA_ChSceneLearn                         9      // 1 Bit, Bit 0
 #define     SWA_ChSceneLearnMask 0x01
 #define     SWA_ChSceneLearnShift 0
@@ -363,6 +389,15 @@
 #define SWA_ChVoltageSend                       15      // 1 Bit, Bit 5
 #define     SWA_ChVoltageSendMask 0x20
 #define     SWA_ChVoltageSendShift 5
+#define SWA_ChApparentPowerSend                  15      // 1 Bit, Bit 4
+#define     SWA_ChApparentPowerSendMask 0x10
+#define     SWA_ChApparentPowerSendShift 4
+#define SWA_ChPowerFactorSend                    15      // 1 Bit, Bit 3
+#define     SWA_ChPowerFactorSendMask 0x08
+#define     SWA_ChPowerFactorSendShift 3
+#define SWA_ChEnergySend                         15      // 1 Bit, Bit 2
+#define     SWA_ChEnergySendMask 0x04
+#define     SWA_ChEnergySendShift 2
 #define SWA_ChPowerSendMinChangePercent         16      // uint8_t
 #define SWA_ChPowerSendMinChangeAbsolute        17      // uint16_t
 #define SWA_ChPowerSendCyclicBase               19      // 2 Bits, Bit 7-6
@@ -387,6 +422,28 @@
 #define SWA_ChVoltageSendCyclicTime             28      // 14 Bits, Bit 13-0
 #define     SWA_ChVoltageSendCyclicTimeMask 0x3FFF
 #define     SWA_ChVoltageSendCyclicTimeShift 0
+#define SWA_ChApparentPowerSendMinChangePercent  30      // uint8_t
+#define SWA_ChApparentPowerSendMinChangeAbsolute 31      // uint16_t
+#define SWA_ChApparentPowerSendCyclicBase        33      // 2 Bits, Bit 7-6
+#define     SWA_ChApparentPowerSendCyclicBaseMask 0xC0
+#define     SWA_ChApparentPowerSendCyclicBaseShift 6
+#define SWA_ChApparentPowerSendCyclicTime        33      // 14 Bits, Bit 13-0
+#define     SWA_ChApparentPowerSendCyclicTimeMask 0x3FFF
+#define     SWA_ChApparentPowerSendCyclicTimeShift 0
+#define SWA_ChPowerFactorSendMinChangeAbsolute   35      // uint8_t
+#define SWA_ChPowerFactorSendCyclicBase          36      // 2 Bits, Bit 7-6
+#define     SWA_ChPowerFactorSendCyclicBaseMask 0xC0
+#define     SWA_ChPowerFactorSendCyclicBaseShift 6
+#define SWA_ChPowerFactorSendCyclicTime          36      // 14 Bits, Bit 13-0
+#define     SWA_ChPowerFactorSendCyclicTimeMask 0x3FFF
+#define     SWA_ChPowerFactorSendCyclicTimeShift 0
+#define SWA_ChEnergySendMinChangeAbsolute        38      // uint16_t
+#define SWA_ChEnergySendCyclicBase               40      // 2 Bits, Bit 7-6
+#define     SWA_ChEnergySendCyclicBaseMask 0xC0
+#define     SWA_ChEnergySendCyclicBaseShift 6
+#define SWA_ChEnergySendCyclicTime               40      // 14 Bits, Bit 13-0
+#define     SWA_ChEnergySendCyclicTimeMask 0x3FFF
+#define     SWA_ChEnergySendCyclicTimeShift 0
 #define SWA_ChSceneAActive                      58      // 1 Bit, Bit 7
 #define     SWA_ChSceneAActiveMask 0x80
 #define     SWA_ChSceneAActiveShift 7
@@ -488,6 +545,8 @@
 #define ParamSWA_ChScenesActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChScenesActive)) & SWA_ChScenesActiveMask))
 // Messungen aktivieren
 #define ParamSWA_ChMeasureActive                     ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChMeasureActive)) & SWA_ChMeasureActiveMask))
+// Messrichtung umkehren
+#define ParamSWA_ChMeasureInvert                     ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChMeasureInvert)) & SWA_ChMeasureInvertMask))
 // Szene lernen
 #define ParamSWA_ChSceneLearn                        ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneLearn)) & SWA_ChSceneLearnMask))
 // Zeit für Treppenlicht
@@ -542,6 +601,38 @@
 #define ParamSWA_ChVoltageSendCyclicTime             (knx.paramWord(SWA_ParamCalcIndex(SWA_ChVoltageSendCyclicTime)) & SWA_ChVoltageSendCyclicTimeMask)
 // Zeit (in Millisekunden)
 #define ParamSWA_ChVoltageSendCyclicTimeMS           (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChVoltageSendCyclicTime))))
+// Bei Änderung senden
+#define ParamSWA_ChApparentPowerSend                 ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChApparentPowerSend)) & SWA_ChApparentPowerSendMask))
+// Bei Änderung senden
+#define ParamSWA_ChPowerFactorSend                   ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChPowerFactorSend)) & SWA_ChPowerFactorSendMask))
+// Bei Änderung senden
+#define ParamSWA_ChEnergySend                        ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChEnergySend)) & SWA_ChEnergySendMask))
+// Mindeständerung relativ
+#define ParamSWA_ChApparentPowerSendMinChangePercent (knx.paramByte(SWA_ParamCalcIndex(SWA_ChApparentPowerSendMinChangePercent)))
+// Mindeständerung absolut
+#define ParamSWA_ChApparentPowerSendMinChangeAbsolute (knx.paramWord(SWA_ParamCalcIndex(SWA_ChApparentPowerSendMinChangeAbsolute)))
+// Zeitbasis
+#define ParamSWA_ChApparentPowerSendCyclicBase       ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChApparentPowerSendCyclicBase)) & SWA_ChApparentPowerSendCyclicBaseMask) >> SWA_ChApparentPowerSendCyclicBaseShift)
+// Zeit
+#define ParamSWA_ChApparentPowerSendCyclicTime       (knx.paramWord(SWA_ParamCalcIndex(SWA_ChApparentPowerSendCyclicTime)) & SWA_ChApparentPowerSendCyclicTimeMask)
+// Zeit (in Millisekunden)
+#define ParamSWA_ChApparentPowerSendCyclicTimeMS     (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChApparentPowerSendCyclicTime))))
+// Mindeständerung absolut
+#define ParamSWA_ChPowerFactorSendMinChangeAbsolute  (knx.paramByte(SWA_ParamCalcIndex(SWA_ChPowerFactorSendMinChangeAbsolute)))
+// Zeitbasis
+#define ParamSWA_ChPowerFactorSendCyclicBase         ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChPowerFactorSendCyclicBase)) & SWA_ChPowerFactorSendCyclicBaseMask) >> SWA_ChPowerFactorSendCyclicBaseShift)
+// Zeit
+#define ParamSWA_ChPowerFactorSendCyclicTime         (knx.paramWord(SWA_ParamCalcIndex(SWA_ChPowerFactorSendCyclicTime)) & SWA_ChPowerFactorSendCyclicTimeMask)
+// Zeit (in Millisekunden)
+#define ParamSWA_ChPowerFactorSendCyclicTimeMS       (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChPowerFactorSendCyclicTime))))
+// Mindeständerung absolut
+#define ParamSWA_ChEnergySendMinChangeAbsolute       (knx.paramWord(SWA_ParamCalcIndex(SWA_ChEnergySendMinChangeAbsolute)))
+// Zeitbasis
+#define ParamSWA_ChEnergySendCyclicBase              ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChEnergySendCyclicBase)) & SWA_ChEnergySendCyclicBaseMask) >> SWA_ChEnergySendCyclicBaseShift)
+// Zeit
+#define ParamSWA_ChEnergySendCyclicTime              (knx.paramWord(SWA_ParamCalcIndex(SWA_ChEnergySendCyclicTime)) & SWA_ChEnergySendCyclicTimeMask)
+// Zeit (in Millisekunden)
+#define ParamSWA_ChEnergySendCyclicTimeMS            (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChEnergySendCyclicTime))))
 // Szene aktiv
 #define ParamSWA_ChSceneAActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneAActive)) & SWA_ChSceneAActiveMask))
 // Szene Verhalten
@@ -596,7 +687,7 @@
 
 // Communication objects per channel (multiple occurrence)
 #define SWA_KoBlockOffset 450
-#define SWA_KoBlockSize 9
+#define SWA_KoBlockSize 13
 
 #define SWA_KoCalcNumber(index) (index + SWA_KoBlockOffset + _channelIndex * SWA_KoBlockSize)
 #define SWA_KoCalcIndex(number) ((number >= SWA_KoCalcNumber(0) && number < SWA_KoCalcNumber(SWA_KoBlockSize)) ? (number - SWA_KoBlockOffset) % SWA_KoBlockSize : -1)
@@ -611,6 +702,10 @@
 #define SWA_KoChPower 6
 #define SWA_KoChCurrent 7
 #define SWA_KoChVoltage 8
+#define SWA_KoChApparentPower 9
+#define SWA_KoChPowerFactor 10
+#define SWA_KoChEnergy 11
+#define SWA_KoChEnergyReset 12
 
 // Schalten
 #define KoSWA_ChSwitch                            (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChSwitch)))
@@ -630,6 +725,14 @@
 #define KoSWA_ChCurrent                           (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChCurrent)))
 // Spannung
 #define KoSWA_ChVoltage                           (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChVoltage)))
+// Scheinleistung
+#define KoSWA_ChApparentPower                     (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChApparentPower)))
+// Leistungsfaktor
+#define KoSWA_ChPowerFactor                       (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChPowerFactor)))
+// Wirkenergie
+#define KoSWA_ChEnergy                            (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChEnergy)))
+// Wirkenergie zurücksetzen
+#define KoSWA_ChEnergyReset                       (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChEnergyReset)))
 
 #define LOG_VisibleChannels                     725      // uint8_t
 #define LOG_VacationKo                          726      // 1 Bit, Bit 7
