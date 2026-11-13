@@ -205,6 +205,12 @@
 #define SWA_TotalEnergySend                     116      // 1 Bit, Bit 5
 #define     SWA_TotalEnergySendMask 0x20
 #define     SWA_TotalEnergySendShift 5
+#define SWA_TotalPowerSendCyclicAverage         116      // 1 Bit, Bit 4
+#define     SWA_TotalPowerSendCyclicAverageMask 0x10
+#define     SWA_TotalPowerSendCyclicAverageShift 4
+#define SWA_TotalCurrentSendCyclicAverage       116      // 1 Bit, Bit 3
+#define     SWA_TotalCurrentSendCyclicAverageMask 0x08
+#define     SWA_TotalCurrentSendCyclicAverageShift 3
 #define SWA_TotalPowerSendMinChangePercent      117      // uint8_t
 #define SWA_TotalPowerSendMinChangeAbsolute     118      // uint16_t
 #define SWA_TotalPowerSendCyclicBase            120      // 2 Bits, Bit 7-6
@@ -265,6 +271,10 @@
 #define ParamSWA_TotalCurrentSendCyclicTimeMS        (paramDelay(knx.paramWord(SWA_TotalCurrentSendCyclicTime)))
 // Gesamtenergie senden
 #define ParamSWA_TotalEnergySend                     ((bool)(knx.paramByte(SWA_TotalEnergySend) & SWA_TotalEnergySendMask))
+// Mittelwert über Zyklus senden
+#define ParamSWA_TotalPowerSendCyclicAverage          ((bool)(knx.paramByte(SWA_TotalPowerSendCyclicAverage) & SWA_TotalPowerSendCyclicAverageMask))
+// Mittelwert über Zyklus senden
+#define ParamSWA_TotalCurrentSendCyclicAverage        ((bool)(knx.paramByte(SWA_TotalCurrentSendCyclicAverage) & SWA_TotalCurrentSendCyclicAverageMask))
 // Mindeständerung absolut
 #define ParamSWA_TotalEnergySendMinChangeAbsolute    (knx.paramWord(SWA_TotalEnergySendMinChangeAbsolute))
 // Zeitbasis
@@ -444,6 +454,18 @@
 #define SWA_ChEnergySendCyclicTime               40      // 14 Bits, Bit 13-0
 #define     SWA_ChEnergySendCyclicTimeMask 0x3FFF
 #define     SWA_ChEnergySendCyclicTimeShift 0
+#define SWA_ChPowerSendCyclicAverage             42      // 1 Bit, Bit 7
+#define     SWA_ChPowerSendCyclicAverageMask 0x80
+#define     SWA_ChPowerSendCyclicAverageShift 7
+#define SWA_ChCurrentSendCyclicAverage           42      // 1 Bit, Bit 6
+#define     SWA_ChCurrentSendCyclicAverageMask 0x40
+#define     SWA_ChCurrentSendCyclicAverageShift 6
+#define SWA_ChVoltageSendCyclicAverage           42      // 1 Bit, Bit 5
+#define     SWA_ChVoltageSendCyclicAverageMask 0x20
+#define     SWA_ChVoltageSendCyclicAverageShift 5
+#define SWA_ChApparentPowerSendCyclicAverage     42      // 1 Bit, Bit 4
+#define     SWA_ChApparentPowerSendCyclicAverageMask 0x10
+#define     SWA_ChApparentPowerSendCyclicAverageShift 4
 #define SWA_ChSceneAActive                      58      // 1 Bit, Bit 7
 #define     SWA_ChSceneAActiveMask 0x80
 #define     SWA_ChSceneAActiveShift 7
@@ -633,6 +655,14 @@
 #define ParamSWA_ChEnergySendCyclicTime              (knx.paramWord(SWA_ParamCalcIndex(SWA_ChEnergySendCyclicTime)) & SWA_ChEnergySendCyclicTimeMask)
 // Zeit (in Millisekunden)
 #define ParamSWA_ChEnergySendCyclicTimeMS            (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChEnergySendCyclicTime))))
+// Mittelwert über Zyklus senden
+#define ParamSWA_ChPowerSendCyclicAverage             ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChPowerSendCyclicAverage)) & SWA_ChPowerSendCyclicAverageMask))
+// Mittelwert über Zyklus senden
+#define ParamSWA_ChCurrentSendCyclicAverage           ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChCurrentSendCyclicAverage)) & SWA_ChCurrentSendCyclicAverageMask))
+// Mittelwert über Zyklus senden
+#define ParamSWA_ChVoltageSendCyclicAverage           ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChVoltageSendCyclicAverage)) & SWA_ChVoltageSendCyclicAverageMask))
+// Mittelwert über Zyklus senden
+#define ParamSWA_ChApparentPowerSendCyclicAverage     ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChApparentPowerSendCyclicAverage)) & SWA_ChApparentPowerSendCyclicAverageMask))
 // Szene aktiv
 #define ParamSWA_ChSceneAActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneAActive)) & SWA_ChSceneAActiveMask))
 // Szene Verhalten
